@@ -1,0 +1,6 @@
+* Welcome!
+  =tagrelease= is a CLI tool for tagging releases.
+
+  To use, you will need to install it via =python setup.py build
+  install= and execute with =tagrelease --help= for instructions on
+  how to use the script.

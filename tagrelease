@@ -1,0 +1,42 @@
+#!python
+import amqp
+import json
+from argdeclare import (Commander, option_group, option, arg)
+
+def dimmerctl():
+    common_options = option_group(
+        option('--host',  action='store', default="localhost", help='AMQP host'),
+        option('--port',  action='store', type=int, default=5672, help='AMQP port'),
+        option('--vhost', action='store', default="/", help='AMQP vhost'),
+        option('--user',  action='store', default="guest", help='AMQP user'),
+	option('--ssl',   action='store_const', default=False, const=True, help='AMQP SSL?'),
+        option('--password',  action='store', default="guest", help='AMQP password')
+    )
+
+    class CLI(Commander):
+        '`dimmerctl` is a CLI utility for interacting with dimmers over AMQP.'
+        name = 'dimmerctl'
+        version = '1.0.0'
+        default_args = ['send', '--help']
+
+        @arg('msg',  help="JSON to send to uuid")
+        @arg('uuid', help="Dimmer UUID")
+        @common_options
+        def do_send(self, options):
+            "Send any valid JSON to a specified dimmer UUID."
+
+            # Make sure we can parse the JSON
+            js   = json.loads(options.msg)
+            msg  = amqp.Message(json.dumps(js))
+            uuid = options.uuid
+
+            conn = amqp.Connection(options.host+":"+str(options.port), options.user, options.password, virtual_host=options.vhost, ssl=options.ssl)
+            chan = conn.channel()
+
+            chan.basic_publish(msg, "", uuid)
+
+    app = CLI()
+    app.cmdline()
+
+if __name__ == '__main__':
+    dimmerctl()
