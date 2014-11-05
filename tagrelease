@@ -14,7 +14,7 @@ def tagrelease():
         updating the deployment branch in `circle.yml`.
         """
         name = 'tagrelease'
-        version = '1.0.2'
+        version = '1.1.1'
         default_args = ['tag', '--help']
 
         @arg('message', help="Message for tag")
