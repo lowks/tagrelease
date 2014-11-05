@@ -7,6 +7,7 @@ README = open(os.path.join(here, 'README.org')).read()
 
 setup(name='tagrelease',
       version='1.1.1',
+      description='CLI tool for tagging releases.',
       long_description=README,
       classifiers=[
 	  "Programming Language :: Python",
