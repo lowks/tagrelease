@@ -7,6 +7,7 @@ import yaml
 from git import *
 from argdeclare import (Commander, option_group, option, arg)
 
+
 def tagrelease():
     class CLI(Commander):
         """
@@ -19,7 +20,9 @@ def tagrelease():
 
         @arg('message', help="Message for tag")
         @arg('version', help="Version string to tag (M.m.p)")
-        @option('--production',   action='store_const', default=False, const=True, help='Merge w/ `production` branch?')
+        @option('--production', action='store_const',
+                default=False, const=True,
+                help='Merge w/ `production` branch?')
         def do_tag(self, opts):
             """
             Tag a release and update the circle.yml config file, this method
@@ -28,7 +31,7 @@ def tagrelease():
 
             cwd = os.getcwd()
             repo = Repo(cwd)
-            git  = repo.git
+            git = repo.git
 
             if repo.is_dirty():
                 exit("Commit your changes first before tagging...")
@@ -42,7 +45,6 @@ def tagrelease():
                 git.merge(opts.version)
                 git.push()
                 git.checkout("master")
-                
 
     app = CLI()
     app.cmdline()
