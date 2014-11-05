@@ -40,6 +40,8 @@ def tagrelease():
             if opts.production:
                 git.checkout("production")
                 git.merge(opts.version)
+                git.push()
+                git.checkout("master")
                 
 
     app = CLI()
