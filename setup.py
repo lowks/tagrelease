@@ -6,7 +6,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.org')).read()
 
 setup(name='tagrelease',
-      version='1.0.0',
+      version='1.0.2',
       long_description=README,
       classifiers=[
 	  "Programming Language :: Python",
