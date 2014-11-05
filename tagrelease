@@ -8,27 +8,30 @@ from argdeclare import (Commander, option_group, option, arg)
 
 def tagrelease():
     class CLI(Commander):
-        '`tagrelease` is a CLI utility for tagging your releases and updating the deployment branch in `circle.yml`.'
+        """
+        `tagrelease` is a CLI utility for tagging your releases and
+        updating the deployment branch in `circle.yml`.
+        """
         name = 'tagrelease'
         version = '1.0.0'
         default_args = ['tag', '--help']
 
-        @arg('msg',  help="JSON to send to uuid")
-        @arg('uuid', help="Dimmer UUID")
+        @arg('message', help="Message for tag")
+        @arg('version', help="Version string to tag (M.m.p)")
         def do_tag(self, opts):
             """
             Tag a release and update the circle.yml config file, this method
             *must be run* within the root of a git initialized directory.
             """
 
-            cwd = os.path.dirname(os.path.realpath(__file__))
+            cwd = os.getcwd()
             repo = Repo(cwd)
             git  = repo.git
 
             if repo.is_dirty():
                 print("Commit your changes first before tagging...")
             else:
-                git.tag()
+                git.tag(a=opt.version, m=opt.message)
 
     app = CLI()
     app.cmdline()
