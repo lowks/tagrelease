@@ -2,6 +2,7 @@
 
 import os
 import json
+import yaml
 
 from git import *
 from argdeclare import (Commander, option_group, option, arg)
@@ -13,11 +14,12 @@ def tagrelease():
         updating the deployment branch in `circle.yml`.
         """
         name = 'tagrelease'
-        version = '1.0.0'
+        version = '1.0.2'
         default_args = ['tag', '--help']
 
         @arg('message', help="Message for tag")
         @arg('version', help="Version string to tag (M.m.p)")
+        @option('--circle',   action='store_const', default=False, const=True, help='Modify a circle.yml file?')
         def do_tag(self, opts):
             """
             Tag a release and update the circle.yml config file, this method
@@ -32,6 +34,12 @@ def tagrelease():
                 print("Commit your changes first before tagging...")
             else:
                 git.tag(opts.version, a=True, m=opts.message)
+
+            if opts.circle:
+                with open(cwd + "/circle.yml", "w") as f:
+                    circle = yaml.load(f)
+                    circle["deployment"]["production"]["branch"] = opts.version
+                    yaml.dump(circle, f)
 
     app = CLI()
     app.cmdline()
