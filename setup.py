@@ -11,7 +11,7 @@ setup(name='tagrelease',
       classifiers=[
 	  "Programming Language :: Python",
       ],
-      install_requires = ['GitPython', 'argdeclare'],
+      install_requires = ['GitPython', 'pyyaml', 'argdeclare'],
       author='Parnell Springmeyer',
       author_email='parnell@plumlife.com',
       keywords='git release tagging script plum',
