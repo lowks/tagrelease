@@ -19,7 +19,7 @@ def tagrelease():
 
         @arg('message', help="Message for tag")
         @arg('version', help="Version string to tag (M.m.p)")
-        @option('--circle',   action='store_const', default=False, const=True, help='Modify a circle.yml file?')
+        @option('--production',   action='store_const', default=False, const=True, help='Merge w/ `production` branch?')
         def do_tag(self, opts):
             """
             Tag a release and update the circle.yml config file, this method
@@ -31,15 +31,16 @@ def tagrelease():
             git  = repo.git
 
             if repo.is_dirty():
-                print("Commit your changes first before tagging...")
+                exit("Commit your changes first before tagging...")
+            elif repo.active_branch.name != 'master':
+                exit("You must tag from the master branch!")
             else:
-                git.tag(opts.version, a=True, m=opts.message)
+                repo.create_tag(opts.version, a=True, m=opts.message)
 
-            if opts.circle:
-                with open(cwd + "/circle.yml", "w") as f:
-                    circle = yaml.load(f)
-                    circle["deployment"]["production"]["branch"] = opts.version
-                    yaml.dump(circle, f)
+            if opts.production:
+                git.checkout("production")
+                git.merge(opts.version)
+                
 
     app = CLI()
     app.cmdline()
