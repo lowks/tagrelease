@@ -31,7 +31,7 @@ def tagrelease():
             if repo.is_dirty():
                 print("Commit your changes first before tagging...")
             else:
-                git.tag(a=opt.version, m=opt.message)
+                git.tag(a=opts.version, m=opts.message)
 
     app = CLI()
     app.cmdline()
